@@ -1,6 +1,6 @@
-import { SlashCommandBuilder } from 'discord.js';
+const { SlashCommandBuilder } = require('discord.js');
 
-module.exporst = {
+module.exports = {
     data: new SlashCommandBuilder()
         .setName('ping')
         .setDescription('Replies with poing!'),

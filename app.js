@@ -1,8 +1,9 @@
 const fs = require('node:fs');
-const path = requier('node:path');
+const path = require('node:path');
 // discord classes 
-const { Client, Events, GatewayIntentBits } = require('discord.js');
-const { token } = require('./config.json');
+const { Client, Collection, Events, GatewayIntentBits } = require('discord.js');
+// const { token } = require('./config.json');
+const TOKEN = process.env.TOKEN;
 
 // Create a new client instance 
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
@@ -11,14 +12,14 @@ client.commands = new Collection();
 
 
 const commandsPath = path.join(__dirname, 'commands');
-const commandFiles = fs.readFileSync(commandsPath).filter(file => file.endsWith('.js'));
+const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
 
 for (const file of commandFiles) {
     const filePath = path.join(commandsPath, file);
-    const command = requier(filePath);
+    const command = require(filePath);
     // Set a new item in collection with the key as the command name and the value as the exported module
     if ('data' in command && 'execute' in command) {
-        client.command.set(command.data.name, command);
+        client.commands.set(command.data.name, command);
     } else {
         console.log(`[WARNING] The command at ${filePath} is missing a required "data" or "execute" property.`);
     }
@@ -48,10 +49,16 @@ client.on(Events.InteractionCreate, async interaction => {
 });
 // when the client is ready, run this code once
 // we use 'c' for the event parameter to keep it separeate from the already defined 'client'
-client.once(Events.ClientReady, c => {
-    console.log(`Ready ! Logged in as ${c.user.tag}`);
+client.once(Events.ClientReady, async (c) => {
+    try {
+        const myGenChannel = await client.channels.fetch('865644813953400853');
+        await myGenChannel.send("I'm live..");
+        console.log(`Ready ! Logged in as ${c.user.tag}`);
+    } catch (error) {
+        console.log("Can't start");
+        console.log(error);
+    }
 });
 
 // Log in to Discord with your client's token
-
-const TOKEN = process.env.TOKEN
+client.login(TOKEN);
