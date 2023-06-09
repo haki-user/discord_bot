@@ -100,9 +100,9 @@ module.exports = {
                 // const newImageBuffer = await image.getBufferAsync(jimp.MIME_PNG);
 
                 //    console.log(image);
-                await fs.writeFile("image.png", imageBuffer, (err) => {
-                    console.log("some error", err);
-                });
+                // await fs.writeFile("image.png", imageBuffer, (err) => {
+                //     console.log("some error", err);
+                // });
                 
                 return {
                     attachment: imageBuffer,
