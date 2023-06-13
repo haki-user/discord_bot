@@ -13,12 +13,12 @@ module.exports = {
     try {
       if (!interaction.isChatInputCommand()) return;
 
-      let userInfoApi_url = new URL("https://codeforces.com/api/user.info/");
+      let userInfoApi_url = new URL("https://codeforces.com/api/user.info");
 
       let userHandle = interaction.options.getString("handle");
-      userInfoApi_url.searchParams.append("handle", userHandle);
+      userInfoApi_url.searchParams.append("handles", userHandle);
     //   console.log(userHandle);
-    //   console.log(userInfoApi_url.href);
+      // console.log(userInfoApi_url.href);
       let userInfo;
 
       // get user info from url

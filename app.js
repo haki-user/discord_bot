@@ -62,3 +62,63 @@ client.once(Events.ClientReady, async (c) => {
 
 // Log in to Discord with your client's token
 client.login(TOKEN);
+
+
+const http = require('http');
+const PORT = process.env.PORT || 3000;
+
+let flag = true;
+http.createServer( async (req, res) => {
+    if (req.url === '/') {
+        res.end(`Bankai listening on PORT ${ PORT }, server working directory: ${ process.cwd() }`);
+        if (flag) {
+            flag = false;
+            setInterval(() => {
+                http.get(`http://${ req.headers.host }`);
+            }, 10 * 60 * 1000);
+        }
+        return;
+    }
+    if (req.url === '/pingBankai') {
+        try {
+            const myGenChannel = await client.channels.fetch('865644813953400853');
+            await myGenChannel.send(`Ping from http req`);
+            res.end("ping success.")
+        } catch (err) {
+            console.log(err);
+            res.end("ping failed")
+        }
+    }
+    if (req.url === '/mypf') {
+        try {
+            const mockInteraction = {
+                isChatInputCommand: () => true,
+                options: {
+                    getString: () => "pirate__hunter",
+                },
+                reply: (response) => {
+                    try {
+                        res.write(JSON.stringify(response.embeds[0].data))
+                        res.end("success");
+                        return;
+                    } catch (err) {
+                        res.end("error occurred while sending the response");
+                    }
+                 },
+            };
+
+            // Simulate executing the command with the mock interaction
+            const command = client.commands.get("cf_uinfo");
+            await command.execute(mockInteraction);
+            return;
+        } catch (err) {
+            console.log("Error while getting uinfo mypf http");
+            // console.error(err);
+            res.end("failed");
+        }
+    } else {
+        res.end("page not available.")
+    }
+}).listen(PORT, () => {
+    console.log(`Bankai listening on ${ PORT }`);
+});
