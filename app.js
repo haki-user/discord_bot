@@ -84,9 +84,10 @@ http.createServer( async (req, res) => {
             const myGenChannel = await client.channels.fetch('865644813953400853');
             await myGenChannel.send(`Ping from http req`);
             res.end("ping success.")
+            return;
         } catch (err) {
             console.log(err);
-            res.end("ping failed")
+            res.end("ping failed");
         }
     }
     if (req.url === '/mypf') {
