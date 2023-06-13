@@ -68,14 +68,17 @@ const http = require('http');
 const PORT = process.env.PORT || 3000;
 
 let flag = true;
+let ct = 0;
 http.createServer( async (req, res) => {
     if (req.url === '/') {
-        res.end(`Bankai listening on PORT ${ PORT }, server working directory: ${ process.cwd() }`);
+        ct++;
+        res.end(`Bankai listening on PORT ${ PORT }, server working directory: ${ process.cwd() }\nTotal req count: ${ ct }`);
+
         if (flag) {
             flag = false;
             setInterval(() => {
                 http.get(`http://${ req.headers.host }`);
-            }, 10 * 60 * 1000);
+            }, 2 * 60 * 1000);
         }
         return;
     }
