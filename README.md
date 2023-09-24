@@ -1,4 +1,3 @@
-# discord_bot_bankai
 
 #commands
 <br/>
